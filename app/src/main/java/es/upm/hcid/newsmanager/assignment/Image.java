@@ -1,18 +1,6 @@
-package es.upm.hcid.pui.assignment;
+package es.upm.hcid.newsmanager.assignment;
 
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.Hashtable;
-
-import javax.imageio.ImageIO;
 
 import org.json.simple.JSONObject;
 
@@ -21,14 +9,13 @@ public class Image extends ModelEntity{
 	private String description;
 	private int idArticle;
 	private String image;
-	
+
 	/**
 	 * Consructor of an Image, always through article, because an image shouldn't exist alone without one article
-	 * @param mm ModelManager used to communicate with remote service 
+	 * @param mm ModelManager used to communicate with remote service
 	 * @param order of the image within the article
 	 * @param description
 	 * @param idArticle - id of article of the image
-	 * @param image - data of the image
 	 */
 	protected Image(ModelManager mm,int order, String description, int idArticle, String b64Image){
 		super(mm);
@@ -38,9 +25,9 @@ public class Image extends ModelEntity{
 		this.idArticle=idArticle;
 		this.image = Utils.createScaledStrImage(b64Image,500,500);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param mm
 	 * @param jsonImage
 	 */
@@ -57,55 +44,55 @@ public class Image extends ModelEntity{
 			Logger.log(Logger.ERROR, "ERROR: Error parsing Image: from json"+jsonImage+"\n"+e.getMessage());
 			throw new IllegalArgumentException("ERROR: Error parsing Image: from json"+jsonImage);
 		}
-	}	
-	
+	}
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public int getOrder() {
 		return order;
 	}
 	/**
-	 * 
+	 *
 	 * @param order
 	 */
 	public void setOrder(int order) {
 		this.order = order;
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getDescription() {
 		return description;
 	}
 	/**
-	 * 
+	 *
 	 * @param description
 	 */
 	public void setDescription(String description) {
 		this.description = description;
 	}
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public int getIdArticle() {
 		return idArticle;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
-		return "Image [id=" + getId() + ", order=" + order + 
-				", description=" + description + 
-				", id_article=" + idArticle + 
+		return "Image [id=" + getId() + ", order=" + order +
+				", description=" + description +
+				", id_article=" + idArticle +
 				", data=" + image + "]";
 	}
-	
+
 	protected Hashtable<String,String> getAttributes(){
 		Hashtable<String,String> res = new Hashtable<String,String>();
 		res.put("id_article", ""+idArticle);
@@ -113,13 +100,13 @@ public class Image extends ModelEntity{
 		res.put("description", description);
 		res.put("data", image);
 		res.put("media_type", "image/png");
-		
+
 		return res;
 	}
-	
+
 	public String getImage(){
 		return image;
 	}
-	
+
 
 }

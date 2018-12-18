@@ -1,4 +1,4 @@
-package es.upm.hcid.pui.assignment.exceptions;
+package es.upm.hcid.newsmanager.assignment.exceptions;
 
 public class ServerCommunicationError extends Exception {
 	/**

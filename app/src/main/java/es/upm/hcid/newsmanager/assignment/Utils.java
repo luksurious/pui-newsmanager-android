@@ -1,4 +1,4 @@
-package es.upm.hcid.pui.assignment;
+package es.upm.hcid.newsmanager.assignment;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

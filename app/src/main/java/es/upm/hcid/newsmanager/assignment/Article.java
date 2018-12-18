@@ -1,4 +1,4 @@
-package es.upm.hcid.pui.assignment;
+package es.upm.hcid.newsmanager.assignment;
 
 
 import java.text.ParseException;
@@ -9,10 +9,10 @@ import java.util.List;
 
 import org.json.simple.JSONObject;
 
-import es.upm.hcid.pui.assignment.exceptions.ServerCommunicationError;
+import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
 
 public class Article extends ModelEntity{
-	
+
 	private String titleText;
 	private String category;
 	private String abstractText;
@@ -39,12 +39,12 @@ public class Article extends ModelEntity{
 			abstractText = parseStringFromJson(jsonArticle,"abstract","").replaceAll("\\\\","");
 			bodyText = parseStringFromJson(jsonArticle,"body","").replaceAll("\\\\","");
 			footerText = parseStringFromJson(jsonArticle,"footer","").replaceAll("\\\\","");
-			
+
 			imageDescription = parseStringFromJson(jsonArticle,"image_description","").replaceAll("\\\\","");
 			thumbnail = parseStringFromJson(jsonArticle,"thumbnail_image","").replaceAll("\\\\","");
-			
+
 			String imageData = parseStringFromJson(jsonArticle,"image_data","").replaceAll("\\\\","");
-		
+
 			if (imageData!=null && !imageData.isEmpty())
 				mainImage = new Image(mm, 1, imageDescription, id, imageData);
 		}catch(Exception e){
@@ -52,7 +52,7 @@ public class Article extends ModelEntity{
 			throw new IllegalArgumentException("ERROR: Error parsing Article: from json"+jsonArticle);
 		}
 	}
-	
+
 	public Article(ModelManager mm, String category, String titleText, String abstractText, String body, String footer){
 		super(mm);
 		id = -1;
@@ -62,9 +62,9 @@ public class Article extends ModelEntity{
 		this.titleText = titleText;
 		bodyText = body;
 		footerText = footer;
-		
+
 	}
-	
+
 	public void setId(int id){
 		if (id <1){
 			throw new IllegalArgumentException("ERROR: Error setting a wrong id to an article:"+id);
@@ -74,11 +74,11 @@ public class Article extends ModelEntity{
 		}
 		this.id = id;
 	}
-	
+
 	public String getTitleText() {
 		return titleText;
 	}
-	
+
 	public String getCategory() {
 		return category;
 	}
@@ -106,7 +106,7 @@ public class Article extends ModelEntity{
 	public void setFooterText(String footerText) {
 		this.footerText = footerText;
 	}
-	
+
 	public int getIdUser(){
 		return idUser;
 	}
@@ -120,28 +120,28 @@ public class Article extends ModelEntity{
 	public void setImage(Image image) {
 		this.mainImage = image;
 	}
-	
-	public Image addImage(String b64Image, String description) throws ServerCommunicationError{	
+
+	public Image addImage(String b64Image, String description) throws ServerCommunicationError{
 		int order = 1;
 		Image img =new Image(mm, order, description, getId(), b64Image);
 		mainImage= img;
 		return img;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Article [id=" + getId()
-				//+ "isPublic=" + isPublic + ", isDeleted=" + isDeleted 
-				+", titleText=" + titleText  
-				+", abstractText=" + abstractText 
-				+  ", bodyText="	+ bodyText + ", footerText=" + footerText 
-				//+ ", publicationDate=" + Utils.dateToString(publicationDate) 
+				//+ "isPublic=" + isPublic + ", isDeleted=" + isDeleted
+				+", titleText=" + titleText
+				+", abstractText=" + abstractText
+				+  ", bodyText="	+ bodyText + ", footerText=" + footerText
+				//+ ", publicationDate=" + Utils.dateToString(publicationDate)
 				+", image_description=" + imageDescription
 				+", image_data=" + mainImage
-				+", thumbnail=" + thumbnail 
+				+", thumbnail=" + thumbnail
 				+ "]";
 	}
-	
+
 	public Hashtable<String,String> getAttributes(){
 		Hashtable<String,String> res = new Hashtable<String,String>();
 		//res.put("is_public", ""+(isPublic?1:0));
@@ -156,7 +156,7 @@ public class Article extends ModelEntity{
 			res.put("image_data", mainImage.getImage());
 			res.put("image_media_type", "image/png");
 		}
-		
+
 		if (mainImage!=null && mainImage.getDescription()!=null && !mainImage.getDescription().isEmpty())
 			res.put("image_description", mainImage.getDescription());
 		else if (imageDescription!=null && !imageDescription.isEmpty())

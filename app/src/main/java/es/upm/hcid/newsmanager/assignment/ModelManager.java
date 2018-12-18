@@ -1,4 +1,4 @@
-package es.upm.hcid.pui.assignment;
+package es.upm.hcid.newsmanager.assignment;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -21,8 +21,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 
-import es.upm.hcid.pui.assignment.exceptions.AuthenticationError;
-import es.upm.hcid.pui.assignment.exceptions.ServerCommunicationError;
+import es.upm.hcid.newsmanager.assignment.exceptions.AuthenticationError;
+import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
 
 public class ModelManager {
 	

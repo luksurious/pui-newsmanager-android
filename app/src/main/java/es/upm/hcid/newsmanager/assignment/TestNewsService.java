@@ -1,15 +1,16 @@
+package es.upm.hcid.newsmanager.assignment;
 
 
 import java.util.List;
 import java.util.Properties;
 import java.io.IOException;
 
-import es.upm.hcid.pui.assignment.Article;
-import es.upm.hcid.pui.assignment.Image;
-import es.upm.hcid.pui.assignment.ModelManager;
-import es.upm.hcid.pui.assignment.Utils;
-import es.upm.hcid.pui.assignment.exceptions.AuthenticationError;
-import es.upm.hcid.pui.assignment.exceptions.ServerCommunicationError;
+import es.upm.hcid.newsmanager.assignment.Article;
+import es.upm.hcid.newsmanager.assignment.Image;
+import es.upm.hcid.newsmanager.assignment.ModelManager;
+import es.upm.hcid.newsmanager.assignment.Utils;
+import es.upm.hcid.newsmanager.assignment.exceptions.AuthenticationError;
+import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
 
 public class TestNewsService {
 
@@ -24,13 +25,13 @@ public class TestNewsService {
 		
 		// Log in
 		ModelManager mm = null;
-		try{
+//		try{
 		
 			mm = new ModelManager(prop);
-		}catch (AuthenticationError e) {
-			
-			System.exit(-1);
-		}
+//		}catch (AuthenticationError e) {
+//
+//			System.exit(-1);
+//		}
 		
 		// get list of articñes for logged user
 		List<Article> res = mm.getArticles(2,2);

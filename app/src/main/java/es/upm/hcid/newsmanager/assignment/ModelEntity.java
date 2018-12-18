@@ -1,11 +1,11 @@
-package es.upm.hcid.pui.assignment;
+package es.upm.hcid.newsmanager.assignment;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 import org.json.simple.JSONObject;
 
-import es.upm.hcid.pui.assignment.exceptions.ServerCommunicationError;
+import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
 
 public abstract class ModelEntity {
 	protected int id;

@@ -7,5 +7,16 @@
     <item
         android:title="@string/sign_in_action_label"
         android:id="@+id/action_login"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+    <item
+        android:title=""
+        android:id="@+id/menu_user_info"
+        android:visible="false"
+        android:enabled="false"
+        app:showAsAction="never" />
+    <item
+        android:title="@string/sign_out_action_label"
+        android:id="@+id/action_logout"
+        android:visible="false"
+        app:showAsAction="never" />
 </menu>

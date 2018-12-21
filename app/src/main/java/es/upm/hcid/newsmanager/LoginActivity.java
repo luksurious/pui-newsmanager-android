@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import android.os.Build;
@@ -20,15 +21,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import es.upm.hcid.newsmanager.assignment.Logger;
 import es.upm.hcid.newsmanager.assignment.ModelManager;
 import es.upm.hcid.newsmanager.assignment.exceptions.AuthenticationError;
+import es.upm.hcid.newsmanager.models.MainPreferences;
+import es.upm.hcid.newsmanager.models.ServiceFactory;
+import es.upm.hcid.newsmanager.models.User;
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen that offers login via username/password.
+ *
+ * Adapted from the auto-generated class of Android Studio
  */
 public class LoginActivity extends AppCompatActivity {
     /**
@@ -41,27 +44,36 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    // common objects
+    /**
+     * Connection provider to the server
+     */
     private ModelManager connectionManager;
+    /**
+     * The app's preferences, for easy access
+     */
+    private MainPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // load main preferences
+        preferences = new MainPreferences(getSharedPreferences(MainPreferences.NAME, Context.MODE_PRIVATE));
+
         setupActionBar();
 
-        Properties config = new Properties();
-        try {
-            config.load(getResources().openRawResource(R.raw.config));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Properties connectionProps = new Properties();
-        connectionProps.setProperty(ModelManager.ATTR_SERVICE_URL, config.getProperty("API_URL"));
-        connectionProps.setProperty(ModelManager.ATTR_ANON_API_KEY, config.getProperty("API_KEY"));
-        connectionProps.setProperty(ModelManager.ATTR_REQUIRE_SELF_CERT, "TRUE");
+        setupConnection();
 
-        connectionManager = new ModelManager(connectionProps);
+        setupLoginForm();
+    }
 
+    /**
+     * As provided by the generated activity
+     */
+    private void setupLoginForm() {
         // Set up the login form.
         mUsernameView = (EditText) findViewById(R.id.username);
 
@@ -90,12 +102,22 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Set up the {@link android.app.ActionBar}, if the API is available.
+     * Create a new connection manager
+     */
+    private void setupConnection() {
+        ServiceFactory serviceFactory = new ServiceFactory(this, preferences);
+        connectionManager = serviceFactory.createModelManager();
+    }
+
+    /**
+     * Set up the custom {@link android.app.ActionBar} / toolbar
      */
     private void setupActionBar() {
         // Show the Up button in the action bar.
         Toolbar myToolbar = (Toolbar) findViewById(R.id.login_toolbar);
         setSupportActionBar(myToolbar);
+
+        // enable back button
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -103,6 +125,8 @@ public class LoginActivity extends AppCompatActivity {
      * Attempts to sign in or register the account specified by the login form.
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
+     *
+     * Adapted from the auto-generated method
      */
     private void attemptLogin() {
         if (mAuthTask != null) {
@@ -185,6 +209,8 @@ public class LoginActivity extends AppCompatActivity {
         private final String mUsername;
         private final String mPassword;
 
+        private User loggedInUser;
+
         UserLoginTask(String username, String password) {
             mUsername = username;
             mPassword = password;
@@ -193,7 +219,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                connectionManager.login(mUsername, mPassword);
+                loggedInUser = connectionManager.login(mUsername, mPassword);
             } catch (AuthenticationError authenticationError) {
                 authenticationError.printStackTrace();
                 Logger.log(Logger.ERROR, "Login failed");
@@ -209,6 +235,7 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
+                preferences.saveUser(loggedInUser);
                 Toast.makeText(getApplicationContext(), "You are now logged in!", Toast.LENGTH_SHORT).show();
                 finish();
             } else {

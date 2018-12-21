@@ -10,4 +10,5 @@
     <string name="error_incorrect_credentials">The provided login credentials are incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="sign_in_action_label">Sign In</string>
+    <string name="sign_out_action_label">Logout</string>
 </resources>

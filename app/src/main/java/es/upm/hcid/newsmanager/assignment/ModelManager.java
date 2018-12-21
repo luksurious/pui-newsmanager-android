@@ -7,10 +7,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -23,31 +21,32 @@ import org.json.simple.parser.ParseException;
 
 import es.upm.hcid.newsmanager.assignment.exceptions.AuthenticationError;
 import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
+import es.upm.hcid.newsmanager.models.User;
 
 public class ModelManager {
-
-    private String idUser;
-    private String authType;
-    private String apikey;
-
-    private boolean isAdministrator = false;
-
-    private String anonymousApikey;
-    private String serviceUrl;
-
-    private boolean requireSelfSigned;
-
     public static final String ATTR_LOGIN_USER = "username";
     public static final String ATTR_LOGIN_PASS = "password";
     public static final String ATTR_SERVICE_URL = "service_url";
     public static final String ATTR_REQUIRE_SELF_CERT = "require_self_signed_cert";
+    /**
+     * New attribute for passing the anonymous/group API key
+     */
     public static final String ATTR_ANON_API_KEY = "anonymous_api_key";
     public static final String ATTR_PROXY_HOST = "";
     public static final String ATTR_PROXY_PORT = "";
     public static final String ATTR_PROXY_USER = "";
     public static final String ATTR_PROXY_PASS = "";
-    public static final String ATTR_APACHE_AUTH_USER = "";
-    public static final String ATTR_APACHE_AUTH_PASS = "";
+
+    /**
+     * The anonymous/grou API key
+     */
+    private String anonymousApikey;
+    /**
+     * The currently logged in user or null
+     */
+    private User loggedInUser = null;
+    private String serviceUrl;
+    private boolean requireSelfSigned;
 
     /**
      * @param ini Initializes entity manager urls and users
@@ -89,7 +88,7 @@ public class ModelManager {
             );
         }
 
-        anonymousApikey = apikey = ini.getProperty(ATTR_ANON_API_KEY);
+        anonymousApikey = ini.getProperty(ATTR_ANON_API_KEY);
         serviceUrl = ini.getProperty(ATTR_SERVICE_URL);
     }
 
@@ -101,10 +100,9 @@ public class ModelManager {
      * @throws AuthenticationError
      */
     @SuppressWarnings("unchecked")
-    public void login(String username, String password) throws AuthenticationError {
+    public User login(String username, String password) throws AuthenticationError {
         String res = "";
         try {
-            String parameters = "";
             String request = serviceUrl + "login";
 
             URL url = new URL(request);
@@ -118,7 +116,6 @@ public class ModelManager {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("charset", "utf-8");
-            //connection.setRequestProperty("Content-Length", "" + Integer.toString(parameters.getBytes().length));
             connection.setUseCaches(false);
 
             JSONObject jsonParam = new JSONObject();
@@ -132,46 +129,53 @@ public class ModelManager {
                 res = parseHttpStreamResult(connection);
 
                 JSONObject userJsonObject = readRestResultFromSingle(res);
-                idUser = userJsonObject.get("user").toString();
-                authType = userJsonObject.get("Authorization").toString();
-                apikey = userJsonObject.get("apikey").toString();
-                isAdministrator = userJsonObject.containsKey("administrator");
 
+                // create User object from data, and return it
+                loggedInUser = new User(
+                        Integer.valueOf(userJsonObject.get("user").toString()),
+                        username,
+                        userJsonObject.get("apikey").toString(),
+                        userJsonObject.get("Authorization").toString()
+                );
+                loggedInUser.setAdmin(userJsonObject.containsKey("administrator"));
+
+                return loggedInUser;
             } else {
                 Logger.log(Logger.ERROR, connection.getResponseMessage());
 
                 throw new AuthenticationError(connection.getResponseMessage());
             }
-        } catch (MalformedURLException e) {
-            //e.printStackTrace();
-            throw new AuthenticationError(e.getMessage());
-        } catch (IOException e) {
-            //e.printStackTrace();
-            throw new AuthenticationError(e.getMessage());
         } catch (Exception e) {
             //e.printStackTrace();
             throw new AuthenticationError(e.getMessage());
         }
     }
 
+    /**
+     * Reset the internal logged in user
+     */
     public void logout() {
-        apikey = anonymousApikey;
-        idUser = null;
-        authType = null;
-        isAdministrator = false;
+        loggedInUser = null;
+    }
+
+    /**
+     * If logged in user is saved across App restarts, allows to set it
+     * @param loggedInUser The logged in user from before
+     */
+    public void setLoggedInUser(User loggedInUser) {
+        this.loggedInUser = loggedInUser;
     }
 
     private String parseHttpStreamResult(HttpURLConnection connection) throws UnsupportedEncodingException, IOException {
-        String res = "";
+        StringBuilder res = new StringBuilder();
         BufferedReader br = new BufferedReader(new InputStreamReader(
                 connection.getInputStream(), "utf-8"));
         String line = null;
         while ((line = br.readLine()) != null) {
-            res += line + "\n";
-
+            res.append(line).append("\n");
         }
         br.close();
-        return res;
+        return res.toString();
     }
 
     @SuppressWarnings("unchecked")
@@ -243,26 +247,25 @@ public class ModelManager {
 
     /****************************/
 
-    /**
-     * @return user id logged in
-     */
-    public String getIdUser() {
-        return idUser;
+    public User getLoggedInUser() {
+        return loggedInUser;
     }
 
     /**
-     * @return true if user logged is an administrator
-     */
-    public boolean isAdministrator() {
-        return isAdministrator;
-    }
-
-
-    /**
+     * If no user is logged in, use default authentication with group key
      * @return auth token header for user logged in
      */
     private String getAuthTokenHeader() {
+        String authType = "PUIRESTAUTH";
+        String apikey = anonymousApikey;
+        if (loggedInUser != null) {
+            authType = loggedInUser.getAuthType();
+            apikey = loggedInUser.getApiKey();
+        }
+
         String authHeader = authType + " apikey=" + apikey;
+
+        Logger.log(Logger.INFO, "Current authentication: " + authHeader);
         return authHeader;
     }
 

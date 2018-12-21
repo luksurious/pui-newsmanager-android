@@ -10,6 +10,7 @@ import java.util.List;
 import org.json.simple.JSONObject;
 
 import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
+import es.upm.hcid.newsmanager.models.User;
 
 public class Article extends ModelEntity{
 
@@ -57,12 +58,18 @@ public class Article extends ModelEntity{
 		super(mm);
 		id = -1;
 		this.category = category;
-		idUser = Integer.parseInt(mm.getIdUser());
 		this.abstractText = abstractText;
 		this.titleText = titleText;
 		bodyText = body;
 		footerText = footer;
 
+        /**
+         * Modification for using a user object
+         */
+        User loggedInUser = mm.getLoggedInUser();
+        if (loggedInUser != null) {
+            idUser = loggedInUser.getId();
+        }
 	}
 
 	public void setId(int id){

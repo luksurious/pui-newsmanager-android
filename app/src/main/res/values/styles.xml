@@ -9,11 +9,18 @@
         <item name="colorOnPrimary">@color/lightText</item>
     </style>
 
+    <!-- Theme for the action bar / toolbar -->
     <style name="AppTheme.ActionBar" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="actionMenuTextColor">@color/lightText</item>
         <item name="android:textColorPrimary">@color/lightText</item>
         <item name="android:background">@color/colorPrimary</item>
         <item name="colorControlNormal">@color/lightText</item>
+        <item name="android:popupBackground">@color/lightText</item>
+    </style>
+
+    <!-- Theme for the toolbar menu -->
+    <style name="AppTheme.Popup" parent="Theme.MaterialComponents.Light">
+        <item name="android:background">@color/lightText</item>
     </style>
 
 </resources>

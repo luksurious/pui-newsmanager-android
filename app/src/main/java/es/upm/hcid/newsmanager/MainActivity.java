@@ -6,11 +6,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import es.upm.hcid.newsmanager.assignment.ModelManager;
+import es.upm.hcid.newsmanager.models.DownloadArticleTask;
 import es.upm.hcid.newsmanager.models.MainPreferences;
 import es.upm.hcid.newsmanager.models.ServiceFactory;
+import es.upm.hcid.newsmanager.models.ServiceManager;
 import es.upm.hcid.newsmanager.models.User;
 
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -25,9 +31,15 @@ public class MainActivity extends AppCompatActivity {
      */
     private ModelManager connectionManager;
 
+    public static MainActivity ctx = null;
+
+    private RecyclerView articleRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ctx = this;
+
         setContentView(R.layout.activity_main);
 
         // set up common fields
@@ -39,6 +51,16 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         // TODO: Vincent: run custom asynctask to fetch articles
+        articleRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+        articleRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
+        articleRecyclerView.setLayoutManager(mLayoutManager);
+
+        new DownloadArticleTask().execute(new Pair(10, 0));
+    }
+
+    public RecyclerView getArticleRecyclerView() {
+        return articleRecyclerView;
     }
 
     @Override
@@ -104,5 +126,6 @@ public class MainActivity extends AppCompatActivity {
     private void setupConnection() {
         ServiceFactory serviceFactory = new ServiceFactory(this, preferences);
         connectionManager = serviceFactory.createModelManager();
+        ServiceManager.getInstance().setModelManager(connectionManager);
     }
 }

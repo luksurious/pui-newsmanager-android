@@ -13,15 +13,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.List;
 
+import es.upm.hcid.newsmanager.MainActivity;
 import es.upm.hcid.newsmanager.R;
 import es.upm.hcid.newsmanager.assignment.Article;
 
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
-    private Context mContext;
+    private MainActivity mContext;
     private List<Article> articles;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -36,7 +35,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     }
 
 
-    public ArticleAdapter(Context mContext, List<Article> articles) {
+    public ArticleAdapter(MainActivity mContext, List<Article> articles) {
         this.mContext = mContext;
         this.articles = articles;
     }
@@ -63,8 +62,8 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Article article = articles.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        final Article article = articles.get(position);
         holder.title.setText(article.getTitleText());
         Bitmap tn = StringToBitMap(article.getThumbnail());
         holder.thumbnail.setImageBitmap(tn);
@@ -72,6 +71,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mContext.goToDetails(articles.get(position));
                 System.out.println("click !");
             }
         });

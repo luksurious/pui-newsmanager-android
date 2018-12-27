@@ -1,6 +1,9 @@
 package es.upm.hcid.newsmanager.assignment;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +15,7 @@ import org.json.simple.JSONObject;
 import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
 import es.upm.hcid.newsmanager.models.User;
 
-public class Article extends ModelEntity{
+public class Article extends ModelEntity implements Parcelable {
 
 	private String titleText;
 	private String category;
@@ -175,5 +178,35 @@ public class Article extends ModelEntity{
 
 	public String getThumbnail() {
 		return thumbnail;
+	}
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+	@Override
+	public void writeToParcel(Parcel parcel, int i) {
+		parcel.writeString(titleText);
+		parcel.writeString(thumbnail);
+	}
+
+	// this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
+	public static final Parcelable.Creator<Article> CREATOR = new Parcelable.Creator<Article>() {
+		public Article createFromParcel(Parcel in) {
+			return new Article(in);
+		}
+
+		public Article[] newArray(int size) {
+			return new Article[size];
+		}
+	};
+
+	// example constructor that takes a Parcel and gives you an object populated with it's values
+	private Article(Parcel in) {
+		// TODO : can be dangerous
+		super(null);
+		titleText = in.readString();
+		thumbnail = in.readString();
 	}
 }

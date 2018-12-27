@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">NewsManager</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_article">Details</string>
 
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>

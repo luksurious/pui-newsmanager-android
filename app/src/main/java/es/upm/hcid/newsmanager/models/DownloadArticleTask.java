@@ -2,6 +2,7 @@ package es.upm.hcid.newsmanager.models;
 
 import android.os.AsyncTask;
 import android.util.Pair;
+import android.view.View;
 
 import java.util.List;
 
@@ -28,10 +29,11 @@ public class DownloadArticleTask extends AsyncTask<Pair<Integer, Integer>, Integ
     }
 
     protected void onPostExecute(List<Article> result) {
-        System.out.println("yop");
         ArticleAdapter adapter = new ArticleAdapter(MainActivity.ctx, result);
         MainActivity.ctx.getArticleRecyclerView().setAdapter(adapter);
+        MainActivity.ctx.getLoadingTextView().setVisibility(View.INVISIBLE);
 
+        // TODO : clean
         for (Article article: result
              ) {
             System.out.println(article.toString());

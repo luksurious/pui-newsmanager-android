@@ -189,6 +189,9 @@ public class Article extends ModelEntity implements Parcelable {
 	public void writeToParcel(Parcel parcel, int i) {
 		parcel.writeString(titleText);
 		parcel.writeString(thumbnail);
+		parcel.writeString(abstractText);
+		parcel.writeString(bodyText);
+		parcel.writeString(footerText);
 	}
 
 	// this is used to regenerate your object. All Parcelables must have a CREATOR that implements these two methods
@@ -208,5 +211,8 @@ public class Article extends ModelEntity implements Parcelable {
 		super(null);
 		titleText = in.readString();
 		thumbnail = in.readString();
+		abstractText = in.readString();
+		bodyText = in.readString();
+		footerText = in.readString();
 	}
 }

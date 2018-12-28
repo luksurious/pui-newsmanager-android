@@ -18,6 +18,10 @@ public abstract class ModelEntity {
 	public ModelEntity(ModelManager mm){
 		this.mm=mm;
 	}
+
+	public void setModelManager(ModelManager mm){
+		this.mm = mm;
+	}
 	
 	/**
 	 * 

@@ -50,29 +50,17 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         return new ViewHolder(itemView);
     }
 
-    public Bitmap StringToBitMap(String encodedString){
-        try {
-            byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
-            Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch(Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
-
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final Article article = articles.get(position);
         holder.title.setText(article.getTitleText());
-        Bitmap tn = StringToBitMap(article.getThumbnail());
+        Bitmap tn = Utils.StringToBitMap(article.getThumbnail());
         holder.thumbnail.setImageBitmap(tn);
 
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mContext.goToDetails(articles.get(position));
-                System.out.println("click !");
             }
         });
     }

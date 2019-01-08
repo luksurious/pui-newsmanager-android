@@ -16,6 +16,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.Html;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -40,6 +41,7 @@ import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
 import es.upm.hcid.newsmanager.models.DownloadArticleById;
 import es.upm.hcid.newsmanager.models.MainPreferences;
 import es.upm.hcid.newsmanager.models.ServiceFactory;
+import es.upm.hcid.newsmanager.models.UploadPictureTask;
 import es.upm.hcid.newsmanager.models.Utils;
 
 import static es.upm.hcid.newsmanager.assignment.Utils.imgToBase64String;
@@ -148,7 +150,12 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
                 stream = getContentResolver().openInputStream(data.getData());
                 Bitmap bitmap = BitmapFactory.decodeStream(stream);
 
+                Image image = new Image(connectionManager, 0, "No description", currentArticle.getId(), es.upm.hcid.newsmanager.assignment.Utils.imgToBase64String(bitmap));
+                new UploadPictureTask(this).execute(new Pair<Article, Image>(currentArticle, image));
                 updateArticleImage(bitmap);
+                //image.save();
+                //currentArticle.setImage(image);
+                //currentArticle.save();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } finally {
@@ -260,6 +267,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         }
     }
 
+
     @Override
     public void onGalleryPhotoClicked() {
         dispatchLoadImageIntent();
@@ -268,5 +276,10 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     @Override
     public void onCameraClicked() {
         dispatchTakePictureIntent();
+      }
+
+    public void updatePic(Image image){
+        currentArticle.setImage(image);
+
     }
 }

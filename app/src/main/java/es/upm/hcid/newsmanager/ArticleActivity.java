@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ import es.upm.hcid.newsmanager.models.ArticleAdapter;
 import es.upm.hcid.newsmanager.models.DownloadArticleById;
 import es.upm.hcid.newsmanager.models.MainPreferences;
 import es.upm.hcid.newsmanager.models.ServiceFactory;
+import es.upm.hcid.newsmanager.models.UploadPictureTask;
 import es.upm.hcid.newsmanager.models.Utils;
 
 public class ArticleActivity extends AppCompatActivity {
@@ -126,13 +128,12 @@ public class ArticleActivity extends AppCompatActivity {
                 imageView.setImageBitmap(bitmap);
 
                 Image image = new Image(connectionManager, 0, "No description", currentArticle.getId(), es.upm.hcid.newsmanager.assignment.Utils.imgToBase64String(bitmap));
-                image.save();
-                currentArticle.setImage(image);
-                currentArticle.save();
+                new UploadPictureTask(this).execute(new Pair<Article, Image>(currentArticle, image));
+                //image.save();
+                //currentArticle.setImage(image);
+                //currentArticle.save();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            } catch (ServerCommunicationError serverCommunicationError) {
-                serverCommunicationError.printStackTrace();
             } finally {
                 try {
                     if (stream != null)
@@ -142,5 +143,9 @@ public class ArticleActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    public void updatePic(Image image){
+        currentArticle.setImage(image);
     }
 }

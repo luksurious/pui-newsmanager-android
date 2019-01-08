@@ -8,6 +8,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ArticleActivity">
+
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/login_toolbar"
         android:layout_width="match_parent"
@@ -15,54 +17,74 @@
         android:layout_marginTop="0dp"
         android:background="@color/colorPrimary"
         android:elevation="4dp"
-        android:theme="@style/AppTheme.ActionBar"/>
+        android:theme="@style/AppTheme.ActionBar">
 
-    <ImageView
-        android:id="@+id/image_a"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="10dp"
-        app:srcCompat="@color/colorAccent" />
+    </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/title_a"
-        android:layout_width="367dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="TextView"
-        android:textAlignment="viewStart"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:layout_width="360dp"
+        android:layout_height="0dp"
+        android:layout_weight="0.8">
 
-    <TextView
-        android:id="@+id/abstract_a"
-        android:layout_width="367dp"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="18sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/body_a"
-        android:layout_width="367dp"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="18sp" />
+            <ImageView
+                android:id="@+id/image_a"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginTop="10dp"
+                android:scaleType="centerCrop"
+                app:srcCompat="@color/colorAccent" />
 
-    <TextView
-        android:id="@+id/footer_a"
-        android:layout_width="365dp"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="18sp" />
+            <TextView
+                android:id="@+id/title_a"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="TextView"
+                android:textAlignment="viewStart"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/abstract_a"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="TextView"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/body_a"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="TextView"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/footer_a"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/change_picture"
-        android:layout_width="217dp"
+        android:layout_width="220dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="10dp"
         android:text="Change picture"
         android:textSize="16sp" />
+
 </LinearLayout>

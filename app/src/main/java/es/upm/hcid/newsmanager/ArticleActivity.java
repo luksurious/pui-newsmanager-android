@@ -33,6 +33,7 @@ import es.upm.hcid.newsmanager.assignment.Article;
 import es.upm.hcid.newsmanager.assignment.Image;
 import es.upm.hcid.newsmanager.assignment.ModelManager;
 import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
+import es.upm.hcid.newsmanager.models.DownloadArticleById;
 import es.upm.hcid.newsmanager.models.MainPreferences;
 import es.upm.hcid.newsmanager.models.ServiceFactory;
 import es.upm.hcid.newsmanager.models.Utils;
@@ -72,20 +73,30 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         connectionManager = serviceFactory.createModelManager();
 
         Intent i = getIntent();
-        currentArticle = i.getParcelableExtra(ArticleActivity.EXTRA_MESSAGE);
-        // TODO: Useful?
-        currentArticle.setModelManager(connectionManager);
-
-        setupActionBar();
-
-        fillWithContent(currentArticle);
+        int currentArticle_id = i.getIntExtra(ArticleActivity.EXTRA_MESSAGE, 0);
+        new DownloadArticleById(connectionManager, this).execute(currentArticle_id);
 
         final Button button = findViewById(R.id.change_picture);
+
+        if(preferences.isUserLoggedIn()){
+            button.setEnabled(true);
+        }
+        else{
+            button.setEnabled(false);
+        }
+
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 ImageSourceListDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
             }
         });
+    }
+
+    public void getCurrentArticleInfo(Article article) {
+        currentArticle = article;
+        currentArticle.setModelManager(connectionManager);
+        setupActionBar();
+        fillWithContent(currentArticle);
     }
 
     /**
@@ -96,13 +107,13 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         title.setText(article.getTitleText());
 
         ImageView image = findViewById(R.id.image_a);
-        image.setImageBitmap(Utils.StringToBitMap(article.getThumbnail()));
+        image.setImageBitmap(Utils.StringToBitMap(article.getImage().getImage()));
 
         TextView abstractText = findViewById(R.id.abstract_a);
         abstractText.setText(article.getAbstractText());
 
         TextView bodyText = findViewById(R.id.body_a);
-        bodyText.setText(article.getAbstractText());
+        bodyText.setText(article.getBodyText());
 
         TextView footerText = findViewById(R.id.footer_a);
         footerText.setText(article.getFooterText());

@@ -4,11 +4,7 @@ package es.upm.hcid.newsmanager.assignment;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.Hashtable;
-import java.util.List;
 
 import org.json.simple.JSONObject;
 
@@ -120,7 +116,7 @@ public class Article extends ModelEntity implements Parcelable {
 	public int getIdUser(){
 		return idUser;
 	}
-	public Image getImage() throws ServerCommunicationError {
+	public Image getImage() {
 		Image image = mainImage;
 		if (mainImage==null && thumbnail!=null && !thumbnail.isEmpty()){
 			image = new Image(mm,1,"",getId(),thumbnail);

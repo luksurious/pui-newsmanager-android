@@ -12,4 +12,7 @@
     <string name="error_field_required">This field is required</string>
     <string name="sign_in_action_label">Sign In</string>
     <string name="sign_out_action_label">Logout</string>
+    <string name="bottom_sheet_option_heading">Change picture</string>
+    <string name="bottom_sheet_option_camera">Use Camera</string>
+    <string name="bottom_sheet_option_gallery">Use Gallery</string>
 </resources>

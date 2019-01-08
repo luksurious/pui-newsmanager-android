@@ -3,7 +3,8 @@
     package="es.upm.hcid.newsmanager">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -35,6 +36,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.upm.hcid.newsmanager.MainActivity" />
         </activity>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="es.upm.hcid.newsmanager.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
     </application>
 
 </manifest>

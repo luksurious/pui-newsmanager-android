@@ -9,6 +9,7 @@
         <item name="colorOnPrimary">@color/lightText</item>
     </style>
 
+
     <!-- Theme for the action bar / toolbar -->
     <style name="AppTheme.ActionBar" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="actionMenuTextColor">@color/lightText</item>

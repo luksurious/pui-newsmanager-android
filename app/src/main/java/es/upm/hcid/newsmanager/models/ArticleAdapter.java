@@ -63,6 +63,12 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
                 mContext.goToDetails(articles.get(position));
             }
         });
+        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mContext.goToDetails(articles.get(position));
+            }
+        });
     }
 
     @Override

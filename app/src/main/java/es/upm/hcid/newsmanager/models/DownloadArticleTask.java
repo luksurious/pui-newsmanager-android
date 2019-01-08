@@ -16,9 +16,11 @@ public class DownloadArticleTask extends AsyncTask<Pair<Integer, Integer>, Integ
      * Connection provider to the server
      */
     private ModelManager connectionManager;
+    private MainActivity activity;
 
-    public DownloadArticleTask(ModelManager connectionManager) {
+    public DownloadArticleTask(ModelManager connectionManager, MainActivity activity) {
         this.connectionManager = connectionManager;
+        this.activity = activity;
     }
 
     protected void onProgressUpdate(Integer... progress) {
@@ -37,14 +39,11 @@ public class DownloadArticleTask extends AsyncTask<Pair<Integer, Integer>, Integ
     }
 
     protected void onPostExecute(List<Article> result) {
-        ArticleAdapter adapter = new ArticleAdapter(MainActivity.ctx, result);
-        MainActivity.ctx.getArticleRecyclerView().setAdapter(adapter);
-        MainActivity.ctx.getLoadingTextView().setVisibility(View.INVISIBLE);
-
         // TODO : clean
-        for (Article article : result
-                ) {
+        for (Article article : result) {
             System.out.println(article.toString());
         }
+
+        activity.updateUIWithData(result);
     }
 }

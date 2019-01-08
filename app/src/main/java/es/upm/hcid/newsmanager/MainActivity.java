@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import es.upm.hcid.newsmanager.assignment.Article;
 import es.upm.hcid.newsmanager.assignment.ModelManager;
+import es.upm.hcid.newsmanager.models.ArticleAdapter;
 import es.upm.hcid.newsmanager.models.DownloadArticleTask;
 import es.upm.hcid.newsmanager.models.MainPreferences;
 import es.upm.hcid.newsmanager.models.ServiceFactory;
@@ -25,6 +26,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     /**
      * The app's preferences, for easy access
@@ -35,15 +38,12 @@ public class MainActivity extends AppCompatActivity {
      */
     private ModelManager connectionManager;
 
-    public static MainActivity ctx = null;
-
     private RecyclerView articleRecyclerView;
     private TextView loadingTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ctx = this;
 
         setContentView(R.layout.activity_main);
 
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         articleRecyclerView.setLayoutManager(mLayoutManager);
 
         // asynchronously load article from the server to the recycler view
-        new DownloadArticleTask(connectionManager).execute(new Pair(10, 0));
+        new DownloadArticleTask(connectionManager, this).execute(new Pair(10, 0));
     }
 
     public void goToDetails(Article article) {
@@ -76,12 +76,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public RecyclerView getArticleRecyclerView() {
-        return articleRecyclerView;
-    }
-
-    public TextView getLoadingTextView() {
-        return loadingTextView;
+    public void updateUIWithData(List<Article> articleList) {
+        ArticleAdapter adapter = new ArticleAdapter(this, articleList);
+        articleRecyclerView.setAdapter(adapter);
+        loadingTextView.setVisibility(View.INVISIBLE);
     }
 
     @Override

@@ -32,8 +32,8 @@ public class ServiceFactory {
     public ModelManager createModelManager() {
         Properties config = getConfig();
         Properties connectionProps = new Properties();
-        connectionProps.setProperty(ModelManager.ATTR_SERVICE_URL, "http://sanger.dia.fi.upm.es/pui-rest-news/");// TODO : config.getProperty("API_URL"));
-        connectionProps.setProperty(ModelManager.ATTR_ANON_API_KEY, "REVWX1RFQU1fMDI=");// TODO : config.getProperty("API_KEY"));
+        connectionProps.setProperty(ModelManager.ATTR_SERVICE_URL, config.getProperty("API_URL"));
+        connectionProps.setProperty(ModelManager.ATTR_ANON_API_KEY, config.getProperty("API_KEY"));
         connectionProps.setProperty(ModelManager.ATTR_REQUIRE_SELF_CERT, "TRUE");
 
         ModelManager mm = new ModelManager(connectionProps);

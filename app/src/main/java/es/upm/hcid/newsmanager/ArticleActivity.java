@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,11 +19,21 @@ import java.io.InputStream;
 
 import es.upm.hcid.newsmanager.assignment.Article;
 import es.upm.hcid.newsmanager.assignment.Image;
+import es.upm.hcid.newsmanager.assignment.ModelManager;
 import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
-import es.upm.hcid.newsmanager.models.ServiceManager;
+import es.upm.hcid.newsmanager.models.MainPreferences;
+import es.upm.hcid.newsmanager.models.ServiceFactory;
 import es.upm.hcid.newsmanager.models.Utils;
 
 public class ArticleActivity extends AppCompatActivity {
+    /**
+     * The app's preferences, for easy access
+     */
+    private MainPreferences preferences;
+    /**
+     * Connection provider to the server
+     */
+    private ModelManager connectionManager;
 
     private Article currentArticle;
 
@@ -35,10 +46,14 @@ public class ArticleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article);
 
+        preferences = new MainPreferences(getSharedPreferences(MainPreferences.NAME, Context.MODE_PRIVATE));
+        ServiceFactory serviceFactory = new ServiceFactory(this, preferences);
+        connectionManager = serviceFactory.createModelManager();
+
         Intent i = getIntent();
         currentArticle = i.getParcelableExtra(ArticleActivity.EXTRA_MESSAGE);
         // TODO: Useful?
-        currentArticle.setModelManager(ServiceManager.getInstance().getModelManager());
+        currentArticle.setModelManager(connectionManager);
 
         setupActionBar();
 
@@ -99,7 +114,7 @@ public class ArticleActivity extends AppCompatActivity {
                 ImageView imageView = findViewById(R.id.image_a);
                 imageView.setImageBitmap(bitmap);
 
-                Image image = new Image(ServiceManager.getInstance().getModelManager(), 0, "No description", currentArticle.getId(), es.upm.hcid.newsmanager.assignment.Utils.imgToBase64String(bitmap));
+                Image image = new Image(connectionManager, 0, "No description", currentArticle.getId(), es.upm.hcid.newsmanager.assignment.Utils.imgToBase64String(bitmap));
                 image.save();
                 currentArticle.setImage(image);
                 currentArticle.save();

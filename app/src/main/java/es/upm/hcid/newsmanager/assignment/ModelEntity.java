@@ -16,7 +16,7 @@ public abstract class ModelEntity {
 	 * @param mm
 	 */
 	public ModelEntity(ModelManager mm){
-		this.mm=mm;
+		this.mm = mm;
 	}
 
 	public void setModelManager(ModelManager mm){

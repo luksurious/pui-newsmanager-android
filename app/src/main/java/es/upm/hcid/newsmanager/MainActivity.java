@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     public void goToDetails(Article article) {
         Intent intent = new Intent(this, ArticleActivity.class);
         // TODO: pass id instead of object
-        intent.putExtra(ArticleActivity.EXTRA_MESSAGE, article);
+        intent.putExtra(ArticleActivity.EXTRA_MESSAGE, article.getId());
         startActivity(intent);
     }
 

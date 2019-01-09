@@ -29,7 +29,7 @@
             android:id="@+id/progressBar2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="0dp"
+            android:layout_margin="@dimen/dp_16"
             android:indeterminate="true"
             android:indeterminateTint="@color/colorAccent"
             android:indeterminateTintMode="src_atop"
@@ -88,15 +88,15 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/change_picture_fab"
+        style="@style/Widget.MaterialComponents.FloatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
         android:layout_margin="16dp"
         android:clickable="true"
         app:backgroundTint="@color/colorAccent"
-        app:tint="#ffffff"
-        style="@style/Widget.MaterialComponents.FloatingActionButton"
         app:fabSize="normal"
-        app:srcCompat="@drawable/ic_photo_library_black_24dp" />
+        app:srcCompat="@drawable/ic_edit_black_24dp"
+        app:tint="#ffffff" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

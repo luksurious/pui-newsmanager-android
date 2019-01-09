@@ -39,11 +39,6 @@ public class DownloadAllArticlesTask extends AsyncTask<Pair<Integer, Integer>, I
     }
 
     protected void onPostExecute(List<Article> result) {
-        // TODO : clean
-        for (Article article : result) {
-            System.out.println(article.toString());
-        }
-
         activity.updateUIWithData(result);
     }
 }

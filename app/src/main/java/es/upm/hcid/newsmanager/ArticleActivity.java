@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -65,7 +68,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
 
     private String mCurrentPhotoPath;
-    private Button changePictureButton;
+    private FloatingActionButton changePictureButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +88,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         int currentArticle_id = i.getIntExtra(ArticleActivity.EXTRA_MESSAGE, 0);
         new DownloadArticleById(connectionManager, this).execute(currentArticle_id);
 
-        changePictureButton = findViewById(R.id.change_picture);
+        changePictureButton = findViewById(R.id.change_picture_fab);
         if (preferences.isUserLoggedIn()) {
             changePictureButton.setEnabled(true);
         } else {
@@ -119,10 +122,11 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         image.setImageBitmap(Utils.StringToBitMap(article.getImage().getImage()));
 
         TextView abstractText = findViewById(R.id.abstract_a);
-        abstractText.setText(article.getAbstractText());
+
+        abstractText.setText(Html.fromHtml(article.getAbstractText(), Html.FROM_HTML_MODE_LEGACY).toString());
 
         TextView bodyText = findViewById(R.id.body_a);
-        bodyText.setText(article.getBodyText());
+        bodyText.setText(Html.fromHtml(article.getBodyText(), Html.FROM_HTML_MODE_LEGACY).toString());
     }
 
     /**
@@ -130,7 +134,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
      */
     private void setupActionBar() {
         // Show the Up button in the action bar.
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.login_toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(myToolbar);
 
         // enable back button

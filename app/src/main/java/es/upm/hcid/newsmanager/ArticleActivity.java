@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -151,7 +152,11 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
                 stream = getContentResolver().openInputStream(data.getData());
                 Bitmap bitmap = BitmapFactory.decodeStream(stream);
 
-                updateArticleImage(bitmap);
+                if (bitmap == null) {
+                    showErrorSnackbar("The selected image seems broken");
+                } else {
+                    updateArticleImage(bitmap);
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } finally {
@@ -169,8 +174,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     }
 
     private void updateArticleImage(Bitmap bitmap) {
-        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_cloud_upload_black_24dp, getTheme()));
-        imageView.setVisibility(View.GONE);
+        imageView.setImageBitmap(bitmap);
         progressBar.setVisibility(View.VISIBLE);
 
         Image image = new Image(connectionManager, 0, "No description", currentArticle.getId(), imgToBase64String(bitmap));
@@ -269,17 +273,37 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         dispatchTakePictureIntent();
       }
 
-    public void updatePic(Image image){
-        imageView.setImageBitmap(Utils.StringToBitMap(image.getImage()));
-        imageView.setVisibility(View.VISIBLE);
+    public void notifyUploadSuccess(Image image){
         progressBar.setVisibility(View.GONE);
 
         currentArticle.setImage(image);
     }
 
+    public void notifyImageConversionError(Image image) {
+        notifyUploadSuccess(image);
+
+        showErrorSnackbar("The server did not correctly convert the image. The thumbnail will be broken.");
+    }
+
+    private void showErrorSnackbar(String msg) {
+        final Snackbar loadingErrorSnackbar = Snackbar.make(
+                findViewById(R.id.article_root_layout),
+                msg,
+                Snackbar.LENGTH_INDEFINITE
+        );
+        loadingErrorSnackbar.setAction("Dismiss", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadingErrorSnackbar.dismiss();
+            }
+        });
+        loadingErrorSnackbar.show();
+    }
+
     public void notifyUploadFailure() {
-        imageView.setVisibility(View.VISIBLE);
+        // revert image
+        imageView.setImageBitmap(Utils.StringToBitMap(currentArticle.getImage().getImage()));
         progressBar.setVisibility(View.GONE);
-        Toast.makeText(this, "An error occurred updating the image.", Toast.LENGTH_SHORT).show();
+        showErrorSnackbar("An error occurred updating the image.");
     }
 }

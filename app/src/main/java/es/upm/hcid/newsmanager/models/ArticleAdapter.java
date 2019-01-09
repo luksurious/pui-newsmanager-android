@@ -1,20 +1,16 @@
 package es.upm.hcid.newsmanager.models;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import es.upm.hcid.newsmanager.MainActivity;
 import es.upm.hcid.newsmanager.R;
 import es.upm.hcid.newsmanager.assignment.Article;

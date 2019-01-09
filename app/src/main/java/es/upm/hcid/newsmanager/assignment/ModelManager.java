@@ -459,6 +459,11 @@ public class ModelManager {
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 String res = parseHttpStreamResult(connection);
                 Logger.log(Logger.INFO, res);
+
+                if (res.contains("fatal libpng error: incorrect header check")) {
+                    throw new ServerCommunicationError("image conversion failed");
+                }
+
                 // get id from status ok when saved
                 int id = readRestResultFromInsert(res);
                 Logger.log(Logger.INFO, "Object image saved with id:" + id);

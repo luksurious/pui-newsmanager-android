@@ -18,7 +18,6 @@ import android.text.Html;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -37,7 +36,6 @@ import androidx.core.content.FileProvider;
 import es.upm.hcid.newsmanager.assignment.Article;
 import es.upm.hcid.newsmanager.assignment.Image;
 import es.upm.hcid.newsmanager.assignment.ModelManager;
-import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
 import es.upm.hcid.newsmanager.models.DownloadArticleById;
 import es.upm.hcid.newsmanager.models.MainPreferences;
 import es.upm.hcid.newsmanager.models.ServiceFactory;
@@ -71,6 +69,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
 
     private String mCurrentPhotoPath;
     private FloatingActionButton changePictureButton;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +102,8 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
                 ImageSourceListDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
             }
         });
+
+        imageView = findViewById(R.id.image_a);
     }
 
     public void getCurrentArticleInfo(Article article) {
@@ -144,18 +145,13 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        InputStream stream = null;
         if (requestCode == REQUEST_LOAD_IMAGE_CODE && resultCode == Activity.RESULT_OK) {
+            InputStream stream = null;
             try {
                 stream = getContentResolver().openInputStream(data.getData());
                 Bitmap bitmap = BitmapFactory.decodeStream(stream);
 
-                Image image = new Image(connectionManager, 0, "No description", currentArticle.getId(), es.upm.hcid.newsmanager.assignment.Utils.imgToBase64String(bitmap));
-                new UploadPictureTask(this).execute(new Pair<Article, Image>(currentArticle, image));
                 updateArticleImage(bitmap);
-                //image.save();
-                //currentArticle.setImage(image);
-                //currentArticle.save();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } finally {
@@ -173,18 +169,13 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     }
 
     private void updateArticleImage(Bitmap bitmap) {
-        ImageView imageView = findViewById(R.id.image_a);
-        imageView.setImageBitmap(bitmap);
+        imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_cloud_upload_black_24dp, getTheme()));
+        imageView.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
 
         Image image = new Image(connectionManager, 0, "No description", currentArticle.getId(), imgToBase64String(bitmap));
-        try {
-            image.save();
-            currentArticle.setImage(image);
-            currentArticle.save();
-        } catch (ServerCommunicationError serverCommunicationError) {
-            serverCommunicationError.printStackTrace();
-            Toast.makeText(this, "An error occurred updating the image.", Toast.LENGTH_SHORT).show();
-        }
+
+        new UploadPictureTask(this).execute(new Pair<Article, Image>(currentArticle, image));
     }
 
     private void dispatchLoadImageIntent() {
@@ -279,7 +270,16 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
       }
 
     public void updatePic(Image image){
-        currentArticle.setImage(image);
+        imageView.setImageBitmap(Utils.StringToBitMap(image.getImage()));
+        imageView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
 
+        currentArticle.setImage(image);
+    }
+
+    public void notifyUploadFailure() {
+        imageView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+        Toast.makeText(this, "An error occurred updating the image.", Toast.LENGTH_SHORT).show();
     }
 }

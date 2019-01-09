@@ -23,13 +23,16 @@ public class UploadPictureTask extends AsyncTask<Pair<Article, Image>, Integer, 
     }
 
     protected void onPostExecute(Image result) {
-        activity.updatePic(result);
+        if (result != null) {
+            activity.updatePic(result);
+        } else {
+            activity.notifyUploadFailure();
+        }
     }
 
     @Override
     protected Image doInBackground(Pair<Article, Image>... pairs) {
-        for (Pair<Article, Image> pair: pairs
-             ) {
+        for (Pair<Article, Image> pair: pairs) {
             try {
                 pair.second.save();
                 //pair.first.save();

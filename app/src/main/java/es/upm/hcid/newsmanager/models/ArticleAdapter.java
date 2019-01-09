@@ -55,7 +55,13 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         final Article article = articles.get(position);
         holder.title.setText(article.getTitleText());
         Bitmap tn = Utils.StringToBitMap(article.getThumbnail());
-        holder.thumbnail.setImageBitmap(tn);
+        if (tn == null) {
+            holder.thumbnail.setImageResource(R.drawable.ic_broken_image_black_24dp);
+            holder.thumbnail.setAlpha(0.5f);
+        } else {
+            holder.thumbnail.setImageBitmap(tn);
+            holder.thumbnail.setAlpha(1f);
+        }
 
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +79,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
     @Override
     public int getItemCount() {
+        if (articles == null) {
+            return 0;
+        }
+
         return articles.size();
     }
 }

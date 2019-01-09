@@ -4,7 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -13,10 +16,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar">
-        <activity android:name=".ArticleActivity"
-            android:parentActivityName=".MainActivity"
+        <activity
+            android:name=".ArticleActivity"
             android:label="@string/title_activity_article"
-            >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.upm.hcid.newsmanager.MainActivity" />
@@ -36,6 +39,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.upm.hcid.newsmanager.MainActivity" />
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="es.upm.hcid.newsmanager.fileprovider"
@@ -43,8 +47,9 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
+
     </application>
 
 </manifest>

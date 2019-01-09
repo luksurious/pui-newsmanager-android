@@ -27,6 +27,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -57,17 +59,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        // display the loading
-        loadingTextView = findViewById(R.id.loading_text);
-        loadingTextView.setVisibility(View.VISIBLE);
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.VISIBLE);
-
         // Init the Recycler view for article
         articleRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         articleRecyclerView.setHasFixedSize(true);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         articleRecyclerView.setLayoutManager(mLayoutManager);
+
+        loadingTextView = findViewById(R.id.loading_text);
+        progressBar = findViewById(R.id.progressBar);
+        loadData();
+    }
+
+    private void loadData() {
+        // display the loading
+        loadingTextView.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
 
         // asynchronously load article from the server to the recycler view
         new DownloadAllArticlesTask(connectionManager, this).execute(new Pair(10, 0));
@@ -84,9 +90,20 @@ public class MainActivity extends AppCompatActivity {
         loadingTextView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
 
+        if (articleList == null) {
+            Snackbar loadingErrorSnackbar = Snackbar.make(articleRecyclerView, "Failed to load data", Snackbar.LENGTH_INDEFINITE);
+            loadingErrorSnackbar.setAction("Retry", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadData();
+                }
+            });
+            loadingErrorSnackbar.show();
+            return;
+        }
+
         ArticleAdapter adapter = new ArticleAdapter(this, articleList);
         articleRecyclerView.setAdapter(adapter);
-
     }
 
     @Override

@@ -23,10 +23,6 @@ public class DownloadAllArticlesTask extends AsyncTask<Pair<Integer, Integer>, I
         this.activity = activity;
     }
 
-    protected void onProgressUpdate(Integer... progress) {
-
-    }
-
     @Override
     protected List<Article> doInBackground(Pair<Integer, Integer>... pairs) {
         try {

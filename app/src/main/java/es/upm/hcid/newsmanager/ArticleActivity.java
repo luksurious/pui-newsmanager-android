@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +51,8 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
      */
     private ModelManager connectionManager;
 
+    private ProgressBar progressBar;
+
     private Article currentArticle;
 
     public final static String EXTRA_MESSAGE = "ARTICLE_EXTRA";
@@ -62,6 +65,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
 
     private String mCurrentPhotoPath;
+    private Button changePictureButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,20 +76,24 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         ServiceFactory serviceFactory = new ServiceFactory(this, preferences);
         connectionManager = serviceFactory.createModelManager();
 
+        setupActionBar();
+
+        progressBar = findViewById(R.id.progressBar2);
+        progressBar.setVisibility(View.VISIBLE);
+
         Intent i = getIntent();
         int currentArticle_id = i.getIntExtra(ArticleActivity.EXTRA_MESSAGE, 0);
         new DownloadArticleById(connectionManager, this).execute(currentArticle_id);
 
-        final Button button = findViewById(R.id.change_picture);
-
-        if(preferences.isUserLoggedIn()){
-            button.setEnabled(true);
+        changePictureButton = findViewById(R.id.change_picture);
+        if (preferences.isUserLoggedIn()) {
+            changePictureButton.setEnabled(true);
+        } else {
+            changePictureButton.setEnabled(false);
         }
-        else{
-            button.setEnabled(false);
-        }
+        changePictureButton.setVisibility(View.INVISIBLE);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        changePictureButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 ImageSourceListDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
             }
@@ -93,9 +101,10 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     }
 
     public void getCurrentArticleInfo(Article article) {
+        progressBar.setVisibility(View.GONE);
         currentArticle = article;
         currentArticle.setModelManager(connectionManager);
-        setupActionBar();
+        changePictureButton.setVisibility(View.VISIBLE);
         fillWithContent(currentArticle);
     }
 
@@ -114,9 +123,6 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
 
         TextView bodyText = findViewById(R.id.body_a);
         bodyText.setText(article.getBodyText());
-
-        TextView footerText = findViewById(R.id.footer_a);
-        footerText.setText(article.getFooterText());
     }
 
     /**
@@ -166,6 +172,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
             currentArticle.save();
         } catch (ServerCommunicationError serverCommunicationError) {
             serverCommunicationError.printStackTrace();
+            Toast.makeText(this, "An error occurred updating the image.", Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import es.upm.hcid.newsmanager.assignment.Article;
 import es.upm.hcid.newsmanager.assignment.ModelManager;
 import es.upm.hcid.newsmanager.models.ArticleAdapter;
-import es.upm.hcid.newsmanager.models.DownloadArticleTask;
+import es.upm.hcid.newsmanager.models.DownloadAllArticlesTask;
 import es.upm.hcid.newsmanager.models.MainPreferences;
 import es.upm.hcid.newsmanager.models.ServiceFactory;
 import es.upm.hcid.newsmanager.models.User;
@@ -23,6 +23,7 @@ import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView articleRecyclerView;
     private TextView loadingTextView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         // display the loading
         loadingTextView = findViewById(R.id.loading_text);
         loadingTextView.setVisibility(View.VISIBLE);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
 
         // Init the Recycler view for article
         articleRecyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
@@ -66,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         articleRecyclerView.setLayoutManager(mLayoutManager);
 
         // asynchronously load article from the server to the recycler view
-        new DownloadArticleTask(connectionManager, this).execute(new Pair(10, 0));
+        new DownloadAllArticlesTask(connectionManager, this).execute(new Pair(10, 0));
     }
 
     public void goToDetails(Article article) {
@@ -77,9 +81,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateUIWithData(List<Article> articleList) {
+        loadingTextView.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.INVISIBLE);
+
         ArticleAdapter adapter = new ArticleAdapter(this, articleList);
         articleRecyclerView.setAdapter(adapter);
-        loadingTextView.setVisibility(View.INVISIBLE);
+
     }
 
     @Override

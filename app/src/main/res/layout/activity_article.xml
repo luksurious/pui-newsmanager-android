@@ -21,6 +21,16 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/colorAccent"
+        android:indeterminateTintMode="src_atop"
+        android:padding="0dp" />
+
     <ScrollView
         android:layout_width="360dp"
         android:layout_height="0dp"
@@ -36,18 +46,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_marginTop="10dp"
-                android:scaleType="centerCrop"
-                app:srcCompat="@color/colorAccent" />
+                android:scaleType="centerCrop" />
 
             <TextView
                 android:id="@+id/title_a"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
-                android:text="TextView"
+                android:layout_marginBottom="10dp"
                 android:textAlignment="viewStart"
                 android:textSize="24sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -57,34 +66,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="TextView"
-                android:textSize="18sp" />
+                android:textColor="@color/dimmedText"
+                android:textSize="18sp"
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/body_a"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="TextView"
-                android:textSize="18sp" />
-
-            <TextView
-                android:id="@+id/footer_a"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView"
                 android:textSize="18sp" />
 
         </LinearLayout>
     </ScrollView>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/change_picture"
         android:layout_width="220dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:layout_margin="10dp"
-        android:text="Change picture"
+        android:text="@string/change_picture_button_text"
         android:textSize="16sp" />
 
 </LinearLayout>

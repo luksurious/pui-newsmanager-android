@@ -1,9 +1,6 @@
 package es.upm.hcid.newsmanager.models;
 
 import android.os.AsyncTask;
-import android.util.Pair;
-
-import java.util.List;
 
 import es.upm.hcid.newsmanager.ArticleActivity;
 import es.upm.hcid.newsmanager.assignment.Article;

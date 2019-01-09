@@ -32,9 +32,8 @@
                 android:layout_below="@id/thumbnail"
                 android:layout_marginBottom="10dp"
                 android:paddingLeft="@dimen/article_title_padding"
-                android:paddingRight="@dimen/article_title_padding"
                 android:paddingTop="@dimen/article_title_padding"
-                android:textColor="#222425"
+                android:paddingRight="@dimen/article_title_padding"
                 android:textSize="24sp" />
         </RelativeLayout>
 

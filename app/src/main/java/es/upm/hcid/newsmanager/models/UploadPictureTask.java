@@ -31,8 +31,8 @@ public class UploadPictureTask extends AsyncTask<Pair<Article, Image>, Integer, 
         for (Pair<Article, Image> pair: pairs
              ) {
             try {
-                ///pair.second.save();
-                pair.first.save();
+                pair.second.save();
+                //pair.first.save();
                 return pair.second;
             } catch (ServerCommunicationError serverCommunicationError) {
                 serverCommunicationError.printStackTrace();

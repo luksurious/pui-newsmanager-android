@@ -458,7 +458,7 @@ public class ModelManager {
             int HttpResult = connection.getResponseCode();
             if (HttpResult == HttpURLConnection.HTTP_OK) {
                 String res = parseHttpStreamResult(connection);
-                //Logger.log (Logger.INFO, res);
+                Logger.log(Logger.INFO, res);
                 // get id from status ok when saved
                 int id = readRestResultFromInsert(res);
                 Logger.log(Logger.INFO, "Object image saved with id:" + id);

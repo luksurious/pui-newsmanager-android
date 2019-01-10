@@ -1,8 +1,5 @@
 package es.upm.hcid.newsmanager;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.text.Html;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
@@ -27,12 +23,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import es.upm.hcid.newsmanager.assignment.Article;
 import es.upm.hcid.newsmanager.assignment.Image;
@@ -107,6 +106,21 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         imageView = findViewById(R.id.image_a);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        boolean result = super.onSupportNavigateUp();
+
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+        return result;
+    }
+
     public void getCurrentArticleInfo(Article article) {
         progressBar.setVisibility(View.GONE);
         currentArticle = article;
@@ -123,14 +137,14 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         title.setText(article.getTitleText());
 
         ImageView image = findViewById(R.id.image_a);
-        image.setImageBitmap(Utils.StringToBitMap(article.getImage().getImage()));
+        image.setImageBitmap(Utils.stringToBitMap(article.getImage().getImage()));
 
         TextView abstractText = findViewById(R.id.abstract_a);
 
-        abstractText.setText(Html.fromHtml(article.getAbstractText(), Html.FROM_HTML_MODE_LEGACY).toString());
+        abstractText.setText(Utils.stripHtml(article.getAbstractText()));
 
         TextView bodyText = findViewById(R.id.body_a);
-        bodyText.setText(Html.fromHtml(article.getBodyText(), Html.FROM_HTML_MODE_LEGACY).toString());
+        bodyText.setText(Utils.stripHtml(article.getBodyText()));
     }
 
     /**
@@ -147,9 +161,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_LOAD_IMAGE_CODE && resultCode == Activity.RESULT_OK) {
-            InputStream stream = null;
-            try {
-                stream = getContentResolver().openInputStream(data.getData());
+            try (InputStream stream = getContentResolver().openInputStream(data.getData())) {
                 Bitmap bitmap = BitmapFactory.decodeStream(stream);
 
                 if (bitmap == null) {
@@ -157,15 +169,8 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
                 } else {
                     updateArticleImage(bitmap);
                 }
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-                try {
-                    if (stream != null)
-                        stream.close();
-                } catch (Exception e) {
-
-                }
             }
         } else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
@@ -231,7 +236,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
@@ -246,18 +251,15 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     dispatchTakePictureIntent();
                 } else {
                     Toast.makeText(this, "You will not be able to take pictures with the camera!", Toast.LENGTH_LONG).show();
                 }
-                return;
             }
         }
     }
@@ -271,9 +273,9 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     @Override
     public void onCameraClicked() {
         dispatchTakePictureIntent();
-      }
+    }
 
-    public void notifyUploadSuccess(Image image){
+    public void notifyUploadSuccess(Image image) {
         progressBar.setVisibility(View.GONE);
 
         currentArticle.setImage(image);
@@ -302,7 +304,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
 
     public void notifyUploadFailure() {
         // revert image
-        imageView.setImageBitmap(Utils.StringToBitMap(currentArticle.getImage().getImage()));
+        imageView.setImageBitmap(Utils.stringToBitMap(currentArticle.getImage().getImage()));
         progressBar.setVisibility(View.GONE);
         showErrorSnackbar("An error occurred updating the image.");
     }

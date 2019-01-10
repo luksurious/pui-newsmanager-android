@@ -10,6 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import es.upm.hcid.newsmanager.MainActivity;
 import es.upm.hcid.newsmanager.R;
@@ -21,12 +22,18 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
+        public TextView abstractView;
         public ImageView thumbnail;
+        public CardView card;
+        public TextView category;
 
         public ViewHolder(@NonNull View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
+            abstractView = (TextView) view.findViewById(R.id.abstractView);
+            category = (TextView) view.findViewById(R.id.category);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            card = (CardView) view.findViewById(R.id.card_view);
         }
     }
 
@@ -50,7 +57,9 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final Article article = articles.get(position);
         holder.title.setText(article.getTitleText());
-        Bitmap tn = Utils.StringToBitMap(article.getThumbnail());
+        holder.abstractView.setText(Utils.stripHtml(article.getAbstractText()));
+        holder.category.setText(article.getCategory().toUpperCase());
+        Bitmap tn = Utils.stringToBitMap(article.getThumbnail());
         if (tn == null) {
             holder.thumbnail.setImageResource(R.drawable.ic_broken_image_black_24dp);
             holder.thumbnail.setAlpha(0.5f);
@@ -59,7 +68,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             holder.thumbnail.setAlpha(1f);
         }
 
-        holder.title.setOnClickListener(new View.OnClickListener() {
+        holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mContext.goToDetails(articles.get(position));
@@ -80,5 +89,15 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         }
 
         return articles.size();
+    }
+
+    public void clear() {
+        articles.clear();
+        notifyDataSetChanged();
+    }
+
+    public void addAll(List<Article> list) {
+        articles.addAll(list);
+        notifyDataSetChanged();
     }
 }

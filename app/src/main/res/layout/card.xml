@@ -2,8 +2,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp">
+    android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
@@ -15,13 +14,17 @@
         card_view:cardCornerRadius="@dimen/card_album_radius">
 
         <RelativeLayout
+            android:id="@+id/card_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingRight="@dimen/dp_16">
 
             <ImageView
                 android:id="@+id/thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/article_thumbnail_height"
+                android:layout_below="@+id/category"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:scaleType="centerCrop"
@@ -32,12 +35,33 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/thumbnail"
-                android:layout_marginBottom="10dp"
-                android:paddingLeft="@dimen/article_title_padding"
                 android:paddingTop="@dimen/article_title_padding"
                 android:paddingRight="@dimen/article_title_padding"
-                android:textSize="24sp"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 tools:text="Eating oranges benefits your health study finds" />
+
+            <TextView
+                android:id="@+id/abstractView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:layout_marginBottom="10dp"
+                android:paddingRight="@dimen/article_title_padding"
+                tools:text="Eating oranges benefits your health study finds" />
+
+            <TextView
+                android:id="@+id/category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:letterSpacing="0.1"
+                android:textColor="@color/dimmedText"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:text="INTERNATIONAL" />
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

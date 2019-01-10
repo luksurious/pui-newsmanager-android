@@ -1,8 +1,6 @@
 package es.upm.hcid.newsmanager.models;
 
 import android.os.AsyncTask;
-import android.util.Pair;
-import android.view.View;
 
 import java.util.List;
 
@@ -11,7 +9,7 @@ import es.upm.hcid.newsmanager.assignment.Article;
 import es.upm.hcid.newsmanager.assignment.ModelManager;
 import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
 
-public class DownloadAllArticlesTask extends AsyncTask<Pair<Integer, Integer>, Integer, List<Article>> {
+public class DownloadAllArticlesTask extends AsyncTask<Void, Integer, List<Article>> {
     /**
      * Connection provider to the server
      */
@@ -24,12 +22,11 @@ public class DownloadAllArticlesTask extends AsyncTask<Pair<Integer, Integer>, I
     }
 
     @Override
-    protected List<Article> doInBackground(Pair<Integer, Integer>... pairs) {
+    protected List<Article> doInBackground(Void... pairs) {
         try {
             return connectionManager.getArticles();
         } catch (ServerCommunicationError serverCommunicationError) {
             serverCommunicationError.printStackTrace();
-            System.out.println(serverCommunicationError);
         }
         return null;
     }

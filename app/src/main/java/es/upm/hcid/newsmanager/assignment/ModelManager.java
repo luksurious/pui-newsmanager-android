@@ -460,8 +460,8 @@ public class ModelManager {
                 String res = parseHttpStreamResult(connection);
                 Logger.log(Logger.INFO, res);
 
-                if (res.contains("fatal libpng error: incorrect header check")) {
-                    throw new ServerCommunicationError("image conversion failed");
+                if (res.contains("fatal libpng error: incorrect header check") || res.contains("Empty string or invalid image")) {
+                    throw new ServerCommunicationError("thumbnail conversion failed");
                 }
 
                 // get id from status ok when saved

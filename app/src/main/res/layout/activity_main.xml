@@ -8,11 +8,12 @@
     tools:context=".MainActivity"
     tools:menu="@menu/menu_main">
 
+    <!-- toolbar with menu -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:elevation="4dp"
+        android:elevation="@dimen/default_elevation"
         android:theme="@style/AppTheme.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -20,12 +21,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/AppTheme.Popup" />
 
+    <!-- loading indicators -->
     <TextView
         android:id="@+id/loading_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/loading_text"
-        android:textSize="18sp"
+        android:textSize="@dimen/regular_text_size"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -37,8 +39,8 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="221dp"
         android:layout_height="11dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="@dimen/element_margin_small"
+        android:layout_marginEnd="@dimen/element_margin_small"
         android:indeterminate="true"
         android:indeterminateTint="@color/colorAccent"
         android:indeterminateTintMode="src_atop"
@@ -47,13 +49,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loading_text" />
 
-
+    <!-- swipe refresh layout to support pull to refresh -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/swipeContainer"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/element_margin_small"
         android:layout_marginTop="?actionBarSize"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="@dimen/element_margin_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,6 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- news item list -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/my_recycler_view"
             android:layout_width="match_parent"

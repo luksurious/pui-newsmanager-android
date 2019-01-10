@@ -39,7 +39,7 @@ public class UploadPictureTask extends AsyncTask<Pair<Article, Image>, Integer, 
                 pair.second.save();
                 return pair.second;
             } catch (ServerCommunicationError serverCommunicationError) {
-                if (serverCommunicationError.getMessage().contains("image conversion failed")) {
+                if (serverCommunicationError.getMessage().contains("thumbnail conversion failed")) {
                     Log.w("UploadPicture", serverCommunicationError.getMessage());
                     hasImageConversionError = true;
                     return pair.second;

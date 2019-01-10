@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private ModelManager connectionManager;
 
+    // UI components
     private RecyclerView articleRecyclerView;
     private TextView loadingTextView;
     private ProgressBar progressBar;
@@ -63,14 +64,11 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
         articleRecyclerView.setLayoutManager(mLayoutManager);
 
-        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         // Setup refresh listener which triggers new data loading
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
                 loadData();
             }
         });
@@ -79,9 +77,14 @@ public class MainActivity extends AppCompatActivity {
 
         loadingTextView = findViewById(R.id.loading_text);
         progressBar = findViewById(R.id.progressBar);
+
+        // retrieve data from the server
         loadData();
     }
 
+    /**
+     * Creates an async task to fetch the data from the server
+     */
     private void loadData() {
         // display the loading
         loadingTextView.setVisibility(View.VISIBLE);
@@ -91,21 +94,33 @@ public class MainActivity extends AppCompatActivity {
         new DownloadAllArticlesTask(connectionManager, this).execute();
     }
 
+    /**
+     * Opens the detail activity for an article, to be called from the article list
+     * @param article Article to open
+     */
     public void goToDetails(Article article) {
         Intent intent = new Intent(this, ArticleActivity.class);
         intent.putExtra(ArticleActivity.EXTRA_MESSAGE, article.getId());
         startActivity(intent);
+
+        // add transition to slide in from the right
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
+    /**
+     * Update the UI after the articles have been loaded
+     * @param articleList The loaded article list
+     */
     public void updateUIWithData(List<Article> articleList) {
+        // remove loading indicators
         swipeContainer.setRefreshing(false);
         loadingTextView.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.INVISIBLE);
 
         if (articleList == null) {
-            Snackbar loadingErrorSnackbar = Snackbar.make(articleRecyclerView, "Failed to load data", Snackbar.LENGTH_INDEFINITE);
-            loadingErrorSnackbar.setAction("Retry", new View.OnClickListener() {
+            // handle errors
+            Snackbar loadingErrorSnackbar = Snackbar.make(articleRecyclerView, getString(R.string.loading_failure_toast), Snackbar.LENGTH_INDEFINITE);
+            loadingErrorSnackbar.setAction(getString(R.string.retry_loading_action), new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     loadData();
@@ -115,12 +130,14 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        // distinguish between first load, and a reload
         if (articleRecyclerView.getAdapter() == null) {
             ArticleAdapter adapter = new ArticleAdapter(this, articleList);
             articleRecyclerView.setAdapter(adapter);
         } else {
             ArticleAdapter adapter = (ArticleAdapter) articleRecyclerView.getAdapter();
 
+            // replace articles after reload
             adapter.clear();
             adapter.addAll(articleList);
         }
@@ -141,13 +158,13 @@ public class MainActivity extends AppCompatActivity {
         MenuItem userInfo = menu.findItem(R.id.menu_user_info);
         if (preferences.isUserLoggedIn()) {
             User loggedInUser = preferences.getLoggedInUser();
-            userInfo.setTitle("Logged in as " + loggedInUser.getUsername());
+            userInfo.setTitle(String.format(getString(R.string.logged_in_menu_title), loggedInUser.getUsername()));
 
             loginAction.setVisible(false);
             logoutAction.setVisible(true);
             userInfo.setVisible(true);
         } else {
-            userInfo.setTitle("Logged out");
+            userInfo.setTitle(getString(R.string.logged_out_menu_title));
             loginAction.setVisible(true);
             logoutAction.setVisible(false);
             userInfo.setVisible(false);
@@ -172,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 preferences.logout();
                 invalidateOptionsMenu();
 
-                Toast.makeText(this, "You are logged out!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.logged_out_toast), Toast.LENGTH_SHORT).show();
                 return true;
 
             default:

@@ -9,6 +9,7 @@
     android:theme="@style/AppTheme"
     tools:context=".LoginActivity">
 
+    <!-- simple toolbar -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/login_toolbar"
         android:layout_width="match_parent"
@@ -19,15 +20,15 @@
         android:theme="@style/AppTheme.ActionBar"/>
 
     <!-- Login progress -->
-
     <ProgressBar
         android:id="@+id/login_progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="@dimen/item_offset"
         android:visibility="gone" />
 
+    <!-- login form -->
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
@@ -43,6 +44,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- logo -->
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
@@ -50,6 +52,7 @@
                 android:layout_marginTop="@dimen/dp_16"
                 app:srcCompat="@drawable/eit_logo" />
 
+            <!-- username input -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -65,6 +68,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- password input -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -84,14 +88,15 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- sign in button -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/sign_in_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:elevation="4dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:elevation="@dimen/default_elevation"
                 android:text="@string/action_sign_in"
-                android:textSize="24sp"
+                android:textSize="@dimen/title_text_size"
                 android:textStyle="bold"
                 app:backgroundTint="@color/colorAccent" />
 

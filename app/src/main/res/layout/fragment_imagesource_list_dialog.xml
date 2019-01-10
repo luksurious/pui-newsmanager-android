@@ -7,6 +7,7 @@
     android:layout_marginTop="@dimen/dp_8"
     android:orientation="vertical">
 
+    <!-- menu heading -->
     <TextView
         android:id="@+id/tv_bottom_sheet_heading"
         android:layout_width="wrap_content"
@@ -16,8 +17,9 @@
         android:gravity="center"
         android:text="@string/bottom_sheet_option_heading"
         android:textColor="@color/dimmedText"
-        android:textSize="16sp" />
+        android:textSize="@dimen/smaller_text_size_dialog" />
 
+    <!-- camera option -->
     <TextView
         android:id="@+id/tv_btn_add_photo_camera"
         android:layout_width="match_parent"
@@ -29,12 +31,13 @@
         android:drawableStart="@drawable/ic_add_a_photo_black_24dp"
         android:gravity="start|center_vertical"
         android:text="@string/bottom_sheet_option_camera"
-        android:textSize="16sp" />
+        android:textSize="@dimen/smaller_text_size_dialog" />
 
+    <!-- gallery option -->
     <TextView
         android:id="@+id/tv_btn_add_photo_gallery"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="@dimen/dp_48"
         android:layout_marginEnd="@dimen/dp_16"
         android:layout_marginStart="@dimen/dp_16"
         android:backgroundTint="@android:color/white"
@@ -42,6 +45,6 @@
         android:drawableStart="@drawable/ic_photo_library_black_24dp"
         android:gravity="start|center_vertical"
         android:text="@string/bottom_sheet_option_gallery"
-        android:textSize="16sp" />
+        android:textSize="@dimen/smaller_text_size_dialog" />
 
 </LinearLayout>

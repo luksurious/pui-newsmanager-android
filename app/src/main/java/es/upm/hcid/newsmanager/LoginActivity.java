@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -122,8 +123,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
+     * Attempts to sign in the account specified by the login form.
+     * If there are form errors (missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      *
      * Adapted from the auto-generated method
@@ -206,9 +207,15 @@ public class LoginActivity extends AppCompatActivity {
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
+        /**
+         * Input fields
+         */
         private final String mUsername;
         private final String mPassword;
 
+        /**
+         * User that was successfully logged in
+         */
         private User loggedInUser;
 
         UserLoginTask(String username, String password) {
@@ -219,10 +226,11 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
+                // call login to the server
                 loggedInUser = connectionManager.login(mUsername, mPassword);
             } catch (AuthenticationError authenticationError) {
                 authenticationError.printStackTrace();
-                Logger.log(Logger.ERROR, "Login failed");
+                Log.e("Login", "Login failed");
                 return false;
             }
 
@@ -235,11 +243,12 @@ public class LoginActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
+                // save logged in user in shared preferences
                 preferences.saveUser(loggedInUser);
-                Toast.makeText(getApplicationContext(), "You are now logged in!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.login_success_toast), Toast.LENGTH_SHORT).show();
                 finish();
             } else {
-                // TODO: change where shown?
+                // show error to the user
                 mPasswordView.setError(getString(R.string.error_incorrect_credentials));
                 mPasswordView.requestFocus();
             }

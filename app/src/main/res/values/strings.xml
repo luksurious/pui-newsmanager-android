@@ -17,4 +17,17 @@
     <string name="bottom_sheet_option_gallery">Use Gallery</string>
     <string name="loading_text">Loading</string>
     <string name="change_picture_button_text">Change picture</string>
+    <string name="login_success_toast">You are now logged in!</string>
+    <string name="logged_out_toast">You are logged out!</string>
+    <string name="logged_out_menu_title">Logged out</string>
+    <string name="logged_in_menu_title">Logged in as %s</string>
+    <string name="retry_loading_action">Retry</string>
+    <string name="loading_failure_toast">Failed to load data</string>
+    <string name="article_loading_empty_id_error">There was an error with the selected article. Please go back and try again.</string>
+    <string name="broken_image_toast">The selected image seems broken</string>
+    <string name="storage_permission_rationale">Unfortunately, this only works if you give permission to write to the external storage</string>
+    <string name="storage_permission_denied_toast">You will not be able to take pictures with the camera!</string>
+    <string name="upload_image_conversion_issue_toast">The server did not correctly convert the image. The thumbnail will be broken.</string>
+    <string name="upload_image_error_toast">An error occurred updating the image.</string>
+    <string name="snackbar_dismiss_action">Dismiss</string>
 </resources>

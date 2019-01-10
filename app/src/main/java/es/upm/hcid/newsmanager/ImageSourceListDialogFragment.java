@@ -9,26 +9,30 @@ import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 public class ImageSourceListDialogFragment extends BottomSheetDialogFragment {
+    /**
+     * Listener which is notified of the result
+     */
     private Listener mListener;
 
+    @NonNull
     public static ImageSourceListDialogFragment newInstance() {
-        final ImageSourceListDialogFragment fragment = new ImageSourceListDialogFragment();
-        return fragment;
+        return new ImageSourceListDialogFragment();
     }
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_imagesource_list_dialog, container, false);
-        // get the views and attach the listener
 
+        // get the views and attach the click listeners
         TextView addGalleryText = (TextView) view.findViewById(R.id.tv_btn_add_photo_gallery);
         addGalleryText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,7 +59,7 @@ public class ImageSourceListDialogFragment extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onAttach(Context context) {
+    public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         final Fragment parent = getParentFragment();
         if (parent != null) {
@@ -71,9 +75,11 @@ public class ImageSourceListDialogFragment extends BottomSheetDialogFragment {
         super.onDetach();
     }
 
+    /**
+     * Interface for this sheet, must be implemented to get notifications of the clicks
+     */
     public interface Listener {
         void onGalleryPhotoClicked();
         void onCameraClicked();
     }
-
 }

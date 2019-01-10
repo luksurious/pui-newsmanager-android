@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -70,6 +71,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     private String mCurrentPhotoPath;
     private FloatingActionButton changePictureButton;
     private ImageView imageView;
+    private CollapsingToolbarLayout toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,18 +87,8 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         progressBar = findViewById(R.id.progressBar2);
         progressBar.setVisibility(View.VISIBLE);
 
-        Intent i = getIntent();
-        int currentArticle_id = i.getIntExtra(ArticleActivity.EXTRA_MESSAGE, 0);
-        new DownloadArticleById(connectionManager, this).execute(currentArticle_id);
-
         changePictureButton = findViewById(R.id.change_picture_fab);
-        if (preferences.isUserLoggedIn()) {
-            changePictureButton.setEnabled(true);
-        } else {
-            changePictureButton.setEnabled(false);
-        }
         changePictureButton.setVisibility(View.INVISIBLE);
-
         changePictureButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 ImageSourceListDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
@@ -104,6 +96,12 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         });
 
         imageView = findViewById(R.id.image_a);
+
+        toolbar = findViewById(R.id.collapsing_toolbar);
+
+        Intent i = getIntent();
+        int currentArticle_id = i.getIntExtra(ArticleActivity.EXTRA_MESSAGE, 0);
+        new DownloadArticleById(connectionManager, this).execute(currentArticle_id);
     }
 
     @Override
@@ -121,12 +119,18 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         return result;
     }
 
-    public void getCurrentArticleInfo(Article article) {
+    public void updateWithArticleInfo(Article article) {
         progressBar.setVisibility(View.GONE);
         currentArticle = article;
         currentArticle.setModelManager(connectionManager);
-        changePictureButton.setVisibility(View.VISIBLE);
+        if (preferences.isUserLoggedIn()) {
+            changePictureButton.setVisibility(View.VISIBLE);
+        } else {
+            changePictureButton.setVisibility(View.INVISIBLE);
+        }
         fillWithContent(currentArticle);
+
+        toolbar.setTitle(currentArticle.getTitleText());
     }
 
     /**

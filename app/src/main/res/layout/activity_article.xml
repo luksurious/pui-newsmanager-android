@@ -36,6 +36,13 @@
                 app:layout_collapseMode="parallax"
                 tools:srcCompat="@tools:sample/avatars" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="110dp"
+                android:layout_gravity="bottom"
+                android:layout_alignBottom="@+id/image_a"
+                android:background="@drawable/scrim_bottom"/>
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/detail_toolbar"
                 android:layout_width="match_parent"

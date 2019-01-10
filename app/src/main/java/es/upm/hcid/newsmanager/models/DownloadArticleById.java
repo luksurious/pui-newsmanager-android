@@ -37,6 +37,6 @@ public class DownloadArticleById extends AsyncTask<Integer, Integer, Article> {
     protected void onPostExecute(Article result) {
         // TODO : clean
 //        System.out.println(result.toString());
-        activity.getCurrentArticleInfo(result);
+        activity.updateWithArticleInfo(result);
     }
 }

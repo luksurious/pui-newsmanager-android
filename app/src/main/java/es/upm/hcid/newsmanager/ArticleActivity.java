@@ -153,6 +153,11 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         // hide progress bar
         progressBar.setVisibility(View.GONE);
 
+        if (article == null) {
+            showErrorSnackbar(getString(R.string.article_loading_error_toast));
+            return;
+        }
+
         currentArticle = article;
 
         // show edit button if the user is logged in

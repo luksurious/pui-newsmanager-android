@@ -227,7 +227,7 @@ public class LoginActivity extends AppCompatActivity {
                 loggedInUser = connectionManager.login(mUsername, mPassword);
             } catch (AuthenticationError authenticationError) {
                 authenticationError.printStackTrace();
-                Log.e("Login", "Login failed");
+                Log.e("Login", "Login failed: " + authenticationError.getLocalizedMessage());
                 return false;
             }
 

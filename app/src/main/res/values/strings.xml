@@ -30,4 +30,5 @@
     <string name="upload_image_conversion_issue_toast">The server did not correctly convert the image. The thumbnail will be broken.</string>
     <string name="upload_image_error_toast">An error occurred updating the image.</string>
     <string name="snackbar_dismiss_action">Dismiss</string>
+    <string name="article_loading_error_toast">There was an error loading the article. Check that you have internet and retry.</string>
 </resources>

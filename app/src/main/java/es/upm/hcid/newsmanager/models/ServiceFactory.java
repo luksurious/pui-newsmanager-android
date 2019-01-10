@@ -17,7 +17,7 @@ public class ServiceFactory {
     private MainPreferences mainPreferences;
 
     /**
-     * @param parentContext The activity in which the factory is created
+     * @param parentContext   The activity in which the factory is created
      * @param mainPreferences An instance of the main preferences
      */
     public ServiceFactory(Context parentContext, MainPreferences mainPreferences) {
@@ -27,6 +27,7 @@ public class ServiceFactory {
 
     /**
      * Creates a connection/model manager, using the global config, and logged in user into account
+     *
      * @return A new model manager for the current state
      */
     public ModelManager createModelManager() {
@@ -49,6 +50,7 @@ public class ServiceFactory {
 
     /**
      * Return the global config
+     *
      * @return The global config as Properties
      */
     public Properties getConfig() {
@@ -65,6 +67,7 @@ public class ServiceFactory {
 
     /**
      * Read the config from the config file
+     *
      * @return The config properties
      */
     private Properties readConfig() {

@@ -1,4 +1,4 @@
-package es.upm.hcid.newsmanager.models;
+package es.upm.hcid.newsmanager;
 
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -12,15 +12,25 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-import es.upm.hcid.newsmanager.MainActivity;
-import es.upm.hcid.newsmanager.R;
 import es.upm.hcid.newsmanager.assignment.Article;
+import es.upm.hcid.newsmanager.models.Utils;
 
+/**
+ * Recycler view adapter for the article list of the main activity.
+ */
 public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHolder> {
+    /**
+     * Reference to the main context of the recycler view
+     */
     private MainActivity mContext;
+
+    /**
+     * List of articles which are to be displayed
+     */
     private List<Article> articles;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        // UI references
         public TextView title;
         public TextView abstractView;
         public ImageView thumbnail;
@@ -37,12 +47,10 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         }
     }
 
-
     public ArticleAdapter(MainActivity mContext, List<Article> articles) {
         this.mContext = mContext;
         this.articles = articles;
     }
-
 
     @NonNull
     @Override
@@ -55,11 +63,14 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        // set the content of the article to the UI fields
         final Article article = articles.get(position);
         holder.title.setText(article.getTitleText());
         holder.abstractView.setText(Utils.stripHtml(article.getAbstractText()));
         holder.category.setText(article.getCategory().toUpperCase());
-        Bitmap tn = Utils.stringToBitMap(article.getThumbnail());
+
+        // set the image, if it is given and valid. otherwise show a placeholder
+        Bitmap tn = Utils.base64StringToBitmap(article.getThumbnail());
         if (tn == null) {
             holder.thumbnail.setImageResource(R.drawable.ic_broken_image_black_24dp);
             holder.thumbnail.setAlpha(0.5f);
@@ -68,6 +79,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
             holder.thumbnail.setAlpha(1f);
         }
 
+        // click listeners to show the detail of the article
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -91,6 +103,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         return articles.size();
     }
 
+    // handlers for refreshing data
     public void clear() {
         articles.clear();
         notifyDataSetChanged();

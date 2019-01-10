@@ -3,14 +3,10 @@ package es.upm.hcid.newsmanager;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.os.AsyncTask;
-
 import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -22,7 +18,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import es.upm.hcid.newsmanager.assignment.Logger;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import es.upm.hcid.newsmanager.assignment.ModelManager;
 import es.upm.hcid.newsmanager.assignment.exceptions.AuthenticationError;
 import es.upm.hcid.newsmanager.models.MainPreferences;
@@ -31,7 +28,7 @@ import es.upm.hcid.newsmanager.models.User;
 
 /**
  * A login screen that offers login via username/password.
- *
+ * <p>
  * Adapted from the auto-generated class of Android Studio
  */
 public class LoginActivity extends AppCompatActivity {
@@ -126,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
      * Attempts to sign in the account specified by the login form.
      * If there are form errors (missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
-     *
+     * <p>
      * Adapted from the auto-generated method
      */
     private void attemptLogin() {

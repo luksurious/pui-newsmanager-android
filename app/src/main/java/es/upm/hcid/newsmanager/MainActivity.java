@@ -22,12 +22,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import es.upm.hcid.newsmanager.assignment.Article;
 import es.upm.hcid.newsmanager.assignment.ModelManager;
-import es.upm.hcid.newsmanager.models.ArticleAdapter;
-import es.upm.hcid.newsmanager.models.DownloadAllArticlesTask;
 import es.upm.hcid.newsmanager.models.MainPreferences;
 import es.upm.hcid.newsmanager.models.ServiceFactory;
 import es.upm.hcid.newsmanager.models.User;
+import es.upm.hcid.newsmanager.tasks.DownloadAllArticlesTask;
 
+/**
+ * Main screen with a list of news items.
+ */
 public class MainActivity extends AppCompatActivity {
     /**
      * The app's preferences, for easy access
@@ -96,6 +98,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Opens the detail activity for an article, to be called from the article list
+     *
      * @param article Article to open
      */
     public void goToDetails(Article article) {
@@ -109,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Update the UI after the articles have been loaded
+     *
      * @param articleList The loaded article list
      */
     public void updateUIWithData(List<Article> articleList) {

@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -37,14 +36,18 @@ import androidx.core.content.FileProvider;
 import es.upm.hcid.newsmanager.assignment.Article;
 import es.upm.hcid.newsmanager.assignment.Image;
 import es.upm.hcid.newsmanager.assignment.ModelManager;
-import es.upm.hcid.newsmanager.models.DownloadArticleById;
 import es.upm.hcid.newsmanager.models.MainPreferences;
 import es.upm.hcid.newsmanager.models.ServiceFactory;
-import es.upm.hcid.newsmanager.models.UploadPictureTask;
 import es.upm.hcid.newsmanager.models.Utils;
+import es.upm.hcid.newsmanager.tasks.DownloadArticleById;
+import es.upm.hcid.newsmanager.tasks.UploadPictureTask;
 
 import static es.upm.hcid.newsmanager.assignment.Utils.imgToBase64String;
 
+/**
+ * The activity for showing the details of a single article.
+ * Provides a way to change the image of the article.
+ */
 public class ArticleActivity extends AppCompatActivity implements ImageSourceListDialogFragment.Listener {
     // key for intent data
     public final static String EXTRA_MESSAGE = "ARTICLE_EXTRA";
@@ -143,6 +146,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
 
     /**
      * Update the UI after the article data has been loaded
+     *
      * @param article The fully loaded article
      */
     public void updateWithArticleInfo(Article article) {
@@ -171,7 +175,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         title.setText(article.getTitleText());
 
         ImageView image = findViewById(R.id.image_a);
-        image.setImageBitmap(Utils.stringToBitMap(article.getImage().getImage()));
+        image.setImageBitmap(Utils.base64StringToBitmap(article.getImage().getImage()));
 
         TextView abstractText = findViewById(R.id.abstract_a);
         // remove HTML from abstract
@@ -237,7 +241,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
         Image image = new Image(connectionManager, 0, "", currentArticle.getId(), imgToBase64String(bitmap));
 
         // send to server
-        new UploadPictureTask(this).execute(new Pair<>(currentArticle, image));
+        new UploadPictureTask(this).execute(image);
     }
 
     /**
@@ -334,6 +338,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     public void onGalleryPhotoClicked() {
         dispatchLoadImageIntent();
     }
+
     @Override
     public void onCameraClicked() {
         dispatchTakePictureIntent();
@@ -349,6 +354,7 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
     /**
      * If the image was uploaded, but the thumbnail could not be created correctly, notify the user
      * but save the image as updated.
+     *
      * @param image The updated image
      */
     public void notifyImageConversionError(Image image) {
@@ -362,13 +368,14 @@ public class ArticleActivity extends AppCompatActivity implements ImageSourceLis
      */
     public void notifyUploadFailure() {
         // revert image
-        imageView.setImageBitmap(Utils.stringToBitMap(currentArticle.getImage().getImage()));
+        imageView.setImageBitmap(Utils.base64StringToBitmap(currentArticle.getImage().getImage()));
         progressBar.setVisibility(View.GONE);
         showErrorSnackbar(getString(R.string.upload_image_error_toast));
     }
 
     /**
      * Helper function to show a dismissable snackbar with a message
+     *
      * @param msg The message to show in the snackbar
      */
     private void showErrorSnackbar(String msg) {

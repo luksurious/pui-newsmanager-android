@@ -8,7 +8,7 @@ import java.util.Properties;
 
 /**
  * Wrapper for the shared preferences item for main preferences.
- *
+ * <p>
  * Provides methods to easily save & read the currently needed objects.
  */
 public class MainPreferences {

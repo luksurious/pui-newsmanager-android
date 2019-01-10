@@ -1,5 +1,10 @@
 package es.upm.hcid.newsmanager.assignment;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+import org.json.simple.parser.ParseException;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -14,15 +19,13 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
-import org.json.simple.parser.ParseException;
-
 import es.upm.hcid.newsmanager.assignment.exceptions.AuthenticationError;
 import es.upm.hcid.newsmanager.assignment.exceptions.ServerCommunicationError;
 import es.upm.hcid.newsmanager.models.User;
 
+/**
+ * Changed to not auto-login with credentials. Instead accepts an anonymous group API key.
+ */
 public class ModelManager {
     public static final String ATTR_LOGIN_USER = "username";
     public static final String ATTR_LOGIN_PASS = "password";
@@ -30,6 +33,7 @@ public class ModelManager {
     public static final String ATTR_REQUIRE_SELF_CERT = "require_self_signed_cert";
     /**
      * New attribute for passing the anonymous/group API key
+     * @author students
      */
     public static final String ATTR_ANON_API_KEY = "anonymous_api_key";
     public static final String ATTR_PROXY_HOST = "";
@@ -38,11 +42,13 @@ public class ModelManager {
     public static final String ATTR_PROXY_PASS = "";
 
     /**
-     * The anonymous/grou API key
+     * The anonymous/group API key
+     * @author students
      */
     private String anonymousApikey;
     /**
      * The currently logged in user or null
+     * @author students
      */
     private User loggedInUser = null;
     private String serviceUrl;
@@ -88,8 +94,9 @@ public class ModelManager {
             );
         }
 
-        anonymousApikey = ini.getProperty(ATTR_ANON_API_KEY);
         serviceUrl = ini.getProperty(ATTR_SERVICE_URL);
+        /** @author students */
+        anonymousApikey = ini.getProperty(ATTR_ANON_API_KEY);
     }
 
     /**
@@ -131,6 +138,7 @@ public class ModelManager {
                 JSONObject userJsonObject = readRestResultFromSingle(res);
 
                 // create User object from data, and return it
+                /** @author students */
                 loggedInUser = new User(
                         Integer.valueOf(userJsonObject.get("user").toString()),
                         username,
@@ -153,6 +161,7 @@ public class ModelManager {
 
     /**
      * Reset the internal logged in user
+     * @author students
      */
     public void logout() {
         loggedInUser = null;
@@ -160,7 +169,9 @@ public class ModelManager {
 
     /**
      * If logged in user is saved across App restarts, allows to set it
+     *
      * @param loggedInUser The logged in user from before
+     * @author students
      */
     public void setLoggedInUser(User loggedInUser) {
         this.loggedInUser = loggedInUser;
@@ -253,9 +264,11 @@ public class ModelManager {
 
     /**
      * If no user is logged in, use default authentication with group key
+     *
      * @return auth token header for user logged in
      */
     private String getAuthTokenHeader() {
+        /** @author students */
         String authType = "PUIRESTAUTH";
         String apikey = anonymousApikey;
         if (loggedInUser != null) {
@@ -460,6 +473,10 @@ public class ModelManager {
                 String res = parseHttpStreamResult(connection);
                 Logger.log(Logger.INFO, res);
 
+                /**
+                 * Checks for the known errors from the server
+                 * @author students
+                 */
                 if (res.contains("fatal libpng error: incorrect header check") || res.contains("Empty string or invalid image")) {
                     throw new ServerCommunicationError("thumbnail conversion failed");
                 }

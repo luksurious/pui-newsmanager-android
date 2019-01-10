@@ -13,6 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+/**
+ * Bottom sheet dialog for showing the options of the image replacement action.
+ * Activities using this must implement it's listener to receive result notifications.
+ */
 public class ImageSourceListDialogFragment extends BottomSheetDialogFragment {
     /**
      * Listener which is notified of the result
@@ -80,6 +84,7 @@ public class ImageSourceListDialogFragment extends BottomSheetDialogFragment {
      */
     public interface Listener {
         void onGalleryPhotoClicked();
+
         void onCameraClicked();
     }
 }
